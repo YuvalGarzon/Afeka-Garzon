@@ -1,0 +1,53 @@
+# Basic .gitignore for a simple HTML/CSS project
+
+# ---- OS files ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+Thumbs.db
+
+# ---- Editors/IDEs ----
+.vscode/
+.idea/
+*.code-workspace
+
+# ---- Temporary files ----
+*.swp
+*.swo
+*~
+~$*
+
+# ---- Logs ----
+*.log
+
+# ---- Environment files (if any) ----
+.env
+.env.*
+
+# ---- Build/output caches (only if you introduce tooling) ----
+dist/
+build/
+out/
+tmp/
+.temp/
+.cache/
+.parcel-cache/
+
+# ---- Package manager artifacts (safe even if unused) ----
+node_modules/
+
+# ---- Test/coverage (if later added) ----
+coverage/
+.nyc_output/
+
+# ---- Static site generators / preprocessors (optional) ----
+_site/
+.sass-cache/
+
+# Keep your actual project files tracked
+!*.html
+!*.css
+!Images/
