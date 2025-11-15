@@ -17,7 +17,7 @@ Each place has its own page with text, images, and a simple layout, all styled u
 
 The homework website is deployed at:
 
-**https://YOUR-GITHUB-PAGES-URL-HERE](http://127.0.0.1:3000/Targil_1/index.html**
+**http://127.0.0.1:3000/Targil_1/index.html**
 
 > Replace this line with the actual URL of the site after you enable GitHub Pages for this repository.
 
