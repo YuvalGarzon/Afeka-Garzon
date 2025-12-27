@@ -1,0 +1,711 @@
+{
+  "updatedAt": "2025-12-27T19:11:45.513Z",
+  "createdAt": "2025-12-15T12:02:42.589Z",
+  "id": "RILlQyur4DDy4UQx",
+  "name": "WebWorkflow",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8",
+          "mode": "list",
+          "cachedResultName": "Web Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -64
+      ],
+      "id": "4e870f57-e1b0-45a0-b7c4-c906269823d7",
+      "name": "Google Sheets Trigger",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "9SdQXwo0YUMNc54B",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst htmlContent = $input.first().json.content.parts[0].text;\n\n// 2. Create the binary file object manually\nconst binaryData = {\n  data: Buffer.from(htmlContent).toString('base64'),\n  mimeType: 'text/html',\n  fileExtension: 'html',\n  fileName: 'TravelGuide.html'\n};\n\n// 3. Return the data to the next node (Gmail)\nreturn {\n  json: $input.first().json, // Keep the text data flow\n  binary: {\n    data: binaryData // This 'data' key is what you will type in the Gmail node\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        736,
+        -136
+      ],
+      "id": "e47c038a-6f6e-44b0-9949-355ce74772b8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets Trigger').item.json.Email }}",
+        "subject": "=Travel Guide for {{ $items(\"Google Sheets Trigger\")[$itemIndex].json.Destination }}",
+        "message": "=<p>Hello,</p>  <p>Please find the generated Travel Guide attached to this email.</p>  <p><strong>Step 1:</strong> Download and open the attached HTML file to view the itinerary.</p>  <p><strong>Step 2:</strong> Click the link below to Approve or Reject the guide:</p>  <a href=\"{{ $execution.resumeFormUrl }}\"    style=\"background-color:#007bff;color:white;padding:12px 24px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block;\">   👉 Click Here to Approve or Reject </a>  <p>Best regards,<br>Travel Bot</p>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        -136
+      ],
+      "id": "28d7ca37-5a36-4304-9bee-c357bf259256",
+      "name": "Send a message",
+      "webhookId": "f00282b0-ea5c-4b8b-b321-8bf559449f9c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BjKcJicLHu6pwfV8",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Do you accept this html page? ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Accept or Reject the html page",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Accept"
+                  },
+                  {
+                    "option": "Reject"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter the promt that you want to add to the page"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        -136
+      ],
+      "id": "90e51dc0-9819-4337-a99f-d00c6ad07330",
+      "name": "Wait",
+      "webhookId": "f19c771f-a5e9-4e94-9d28-26ad9e20be13"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "562080ec-0685-4665-98e0-cfbd025b0326",
+              "leftValue": "={{ $json[\"Accept or Reject the html page\"] }}",
+              "rightValue": "Accept",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1408,
+        -64
+      ],
+      "id": "20c41563-269b-4ce3-9979-083af3092146",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the binary file from your earlier node\n// Make sure 'Code in JavaScript' matches the EXACT name of the node that created the HTML file\nconst binaryFile = $('Code in JavaScript').first().binary.data;\n\n// 2. Return the current JSON + the restored Binary file\nreturn {\n  json: $input.first().json, // Keep the Form data (Accept/Reject)\n  binary: {\n    data: binaryFile // Put the file back into the stream as 'data'\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        -64
+      ],
+      "id": "ea528eb4-7f24-4823-853c-453acc580403",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/YuvalGarzon",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Afeka-Garzon",
+          "mode": "list",
+          "cachedResultName": "Afeka-Garzon",
+          "cachedResultUrl": "https://github.com/YuvalGarzon/Afeka-Garzon"
+        },
+        "filePath": "=WEB_HW2/HtmlPages/{{ $('Google Sheets Trigger').item.json.Destination }}{{ $now }}.html",
+        "binaryData": true,
+        "commitMessage": "Added a new page"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        -64
+      ],
+      "id": "3ca3b104-1096-4b10-9c48-608609605e67",
+      "name": "Create a file",
+      "webhookId": "d0564068-c822-405b-890e-912bd4deb2d6",
+      "credentials": {
+        "githubApi": {
+          "id": "OpLL02XC0rlPCEFu",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "delete",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/YuvalGarzon",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Afeka-Garzon",
+          "mode": "list",
+          "cachedResultName": "Afeka-Garzon",
+          "cachedResultUrl": "https://github.com/YuvalGarzon/Afeka-Garzon"
+        },
+        "filePath": "WEB_HW2/n8n_Workflow.json",
+        "commitMessage": "Delete n8n_workflow file"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        32
+      ],
+      "id": "dd69fa34-4c6c-440e-8f99-a43c2fc392c0",
+      "name": "Delete a file",
+      "webhookId": "0d228274-23a5-4bec-984d-08773708eb82",
+      "credentials": {
+        "githubApi": {
+          "id": "OpLL02XC0rlPCEFu",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "https://github.com/YuvalGarzon",
+          "mode": "url"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Afeka-Garzon",
+          "mode": "list",
+          "cachedResultName": "Afeka-Garzon",
+          "cachedResultUrl": "https://github.com/YuvalGarzon/Afeka-Garzon"
+        },
+        "filePath": "WEB_HW2/n8n_Workflow.json",
+        "fileContent": "={{ $('JSON to file').item.json.content }}",
+        "commitMessage": "Saving Workflow"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2752,
+        32
+      ],
+      "id": "9ec76a9b-a148-4c0d-9f2c-82b5f550feb4",
+      "name": "Create a file1",
+      "webhookId": "6426f5d3-ae7d-411a-9d10-b44da1e94372",
+      "credentials": {
+        "githubApi": {
+          "id": "OpLL02XC0rlPCEFu",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Calculate the clean filename (keeping your regex logic)\nconst fileName = `WEB_HW2/${$json.name.replace(/[^a-z0-9_-]/gi, \"_\")}.json`;\n\n// 2. Convert the entire workflow data to a text string\nconst jsonContent = JSON.stringify($json, null, 2);\n\n// 3. Return clean JSON (No Binary)\nreturn [\n  {\n    json: {\n      fileName: fileName,\n      content: jsonContent\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        32
+      ],
+      "id": "1b77f3b5-9fdd-4978-b556-2bef23aa7373",
+      "name": "JSON to file"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "630ede81-0ba4-44b5-95a1-0958eafc64d3",
+              "leftValue": "={{ $json.NEW }}",
+              "rightValue": "NEW",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        160,
+        -64
+      ],
+      "id": "a3178649-89c7-4ff5-a405-69063d07e2ed",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemma-3-12b-it",
+          "mode": "list",
+          "cachedResultName": "models/gemma-3-12b-it"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=={{ (() => {\n  // This assumes the Google Sheets node outputs columns named:\n  // Destination, Email, HtmlLink, and (optional) Status / Notes\n  const city = $json.Destination ?? $json.Name ?? \"UNKNOWN_CITY\";\n\n  // If you have a rejection feedback field coming from your approval form:\n  const feedback = $json[\"Enter the promt that you want to add to the page\"] \n                ?? $json.Notes \n                ?? \"\";\n\n  return `Act as a web developer.\nTarget City: ${city}\n\n${feedback ? `The user rejected the previous travel guide for ${city}.\nFeedback: \"${feedback}\"\nRewrite the HTML completely and fix the issues based on the feedback.\n` : `Create a detailed HTML travel guide for ${city}.\n`}\n\nINSTRUCTION:\nGenerate the HTML source code for a travel guide page.\nReturn ONLY the raw HTML string. Do NOT use markdown code blocks (like \\` \\` \\`html).\nDo NOT include any introductory text. Start directly with <!DOCTYPE html>.\n\nRules:\n1) Use standard HTML and CSS (internal styles in <style>).\n2) Interactive Map: Use Leaflet.js.\n   - Include Leaflet CSS & JS from unpkg CDN in the <head>.\n   - Do NOT include integrity or crossorigin attributes.\n3) Content:\n   - H1 Title: \"${city}\"\n   - 3 Images (use <img> tags, vary seeds 1,2,3):\n     https://image.pollinations.ai/prompt/${encodeURIComponent(city + \" landmark\")}?seed=1\n     https://image.pollinations.ai/prompt/${encodeURIComponent(city + \" landmark\")}?seed=2\n     https://image.pollinations.ai/prompt/${encodeURIComponent(city + \" landmark\")}?seed=3\n   - Attractions: 5 real top attractions in ${city}.\n     For EACH attraction include: name, latitude, longitude, rating (e.g., 4.6/5).\n4) Map Logic:\n   - Create <div id=\"map\"> with height: 400px.\n   - Create an array of { name, lat, lon, rating }.\n   - Add markers in a loop and show name + rating in popup.\n   - Use map.fitBounds().\n\nFinal Output Format: Pure HTML string only.`;\n})() }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        -64
+      ],
+      "id": "dc71c92d-e2ba-414d-85a3-bfb132574759",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "EHmvCDjhVreGZ90N",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8",
+          "mode": "list",
+          "cachedResultName": "Web Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "HtmlLink": "={{ $json.content.name }}",
+            "Destination": "={{ $('Google Sheets Trigger').item.json.Destination }}"
+          },
+          "matchingColumns": [
+            "Destination"
+          ],
+          "schema": [
+            {
+              "id": "Destination",
+              "displayName": "Destination",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "HtmlLink",
+              "displayName": "HtmlLink",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "NEW",
+              "displayName": "NEW",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2080,
+        -160
+      ],
+      "id": "dd8f8a3c-ffa1-4d19-8396-5333a747bbc9",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "wHqBxeBNGrnb5Jk0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "value": "http://localhost:5678/workflow/RILlQyur4DDy4UQx",
+          "mode": "url"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        32
+      ],
+      "id": "f2fe019f-241e-4225-a41f-0d4b546de788",
+      "name": "Get a workflow",
+      "credentials": {
+        "n8nApi": {
+          "id": "36q4d2hd5jJ5c3qm",
+          "name": "n8n account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Get a workflow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file": {
+      "main": [
+        [
+          {
+            "node": "Create a file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to file": {
+      "main": [
+        [
+          {
+            "node": "Delete a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a workflow": {
+      "main": [
+        [
+          {
+            "node": "JSON to file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Google Sheets Trigger": {
+      "documentId": "1qh-rm6dguB0BPIMhEY4wAriVI_7cn-H1h2OJtM_n4h8",
+      "sheetId": 0,
+      "lastIndexChecked": 2
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c2e94796-1391-4d4a-b6b3-8c18e1b5504a",
+  "activeVersionId": null,
+  "versionCounter": 62,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-12-15T12:02:42.592Z",
+      "createdAt": "2025-12-15T12:02:42.592Z",
+      "role": "workflow:owner",
+      "workflowId": "RILlQyur4DDy4UQx",
+      "projectId": "COQpbuCuMTq0nbi9",
+      "project": {
+        "updatedAt": "2025-12-15T11:17:42.662Z",
+        "createdAt": "2025-12-15T11:12:39.185Z",
+        "id": "COQpbuCuMTq0nbi9",
+        "name": "Yuval Garzon <yuvalgarzon1@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "d8004e69-bdfd-4a70-92bb-b69b6e5a73e6",
+        "projectRelations": [
+          {
+            "updatedAt": "2025-12-15T11:12:39.185Z",
+            "createdAt": "2025-12-15T11:12:39.185Z",
+            "userId": "d8004e69-bdfd-4a70-92bb-b69b6e5a73e6",
+            "projectId": "COQpbuCuMTq0nbi9",
+            "user": {
+              "updatedAt": "2025-12-27T18:46:45.051Z",
+              "createdAt": "2025-12-15T11:12:39.033Z",
+              "id": "d8004e69-bdfd-4a70-92bb-b69b6e5a73e6",
+              "email": "yuvalgarzon1@gmail.com",
+              "firstName": "Yuval",
+              "lastName": "Garzon",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-12-15T11:17:55.100Z",
+                "personalization_survey_n8n_version": "1.123.5",
+                "companyType": "education"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "RILlQyur4DDy4UQx",
+                "userActivatedAt": 1766597565753,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1766861202552
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-27",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
