@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rome, Italy</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #city-description {
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+        .attraction {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Rome, Italy</h1>
+
+    <p id="city-description">Rome, the capital of Italy, is a captivating city steeped in history and brimming with vibrant culture. From the ruins of the Roman Empire to the grandeur of Vatican City, Rome offers an unparalleled journey through time.  Its charming streets, delicious cuisine, and iconic landmarks make it a must-visit destination for travelers worldwide.</p>
+
+    <img src="https://image.pollinations.ai/prompt/Rome%2C%20Italy%20landmark?seed=1" alt="Rome Landmark 1">
+    <img src="https://image.pollinations.ai/prompt/Rome%2C%20Italy%20landmark?seed=2" alt="Rome Landmark 2">
+    <img src="https://image.pollinations.ai/prompt/Rome%2C%20Italy%20landmark?seed=3" alt="Rome Landmark 3">
+
+    <h2>Top Attractions:</h2>
+
+    <div class="attraction">
+        <h3>Colosseum</h3>
+        <p>Latitude: 41.8902, Longitude: 12.4922, Rating: 4.6/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Roman Forum</h3>
+        <p>Latitude: 41.8920, Longitude: 12.4875, Rating: 4.5/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Pantheon</h3>
+        <p>Latitude: 41.9028, Longitude: 12.4736, Rating: 4.7/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Vatican City</h3>
+        <p>Latitude: 41.9028, Longitude: 12.4483, Rating: 4.8/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Trevi Fountain</h3>
+        <p>Latitude: 41.9009, Longitude: 12.4833, Rating: 4.6/5</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([41.9028, 12.4964], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var attractions = [
+            { name: "Colosseum", lat: 41.8902, lon: 12.4922, rating: 4.6 },
+            { name: "Roman Forum", lat: 41.8920, lon: 12.4875, rating: 4.5 },
+            { name: "Pantheon", lat: 41.9028, lon: 12.4736, rating: 4.7 },
+            { name: "Vatican City", lat: 41.9028, lon: 12.4483, rating: 4.8 },
+            { name: "Trevi Fountain", lat: 41.9009, lon: 12.4833, rating: 4.6 }
+        ];
+
+        attractions.forEach(function(attraction) {
+            var popupContent = attraction.name + "<br>Rating: " + attraction.rating + "/5";
+            L.marker([attraction.lat, attraction.lon]).addTo(map).bindPopup(popupContent);
+        });
+
+        map.fitBounds([[41.8902, 12.4483], [41.9028, 12.4922]]);
+    </script>
+</body>
+</html>
