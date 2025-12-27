@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New York, USA</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #city-description {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .attraction {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .attraction h3 {
+            margin-top: 0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>New York, USA</h1>
+
+    <p id="city-description">New York City, a global hub for finance, culture, and entertainment, offers an unparalleled urban experience. Founded in the 17th century, it's a melting pot of diverse communities and iconic landmarks. From its vibrant arts scene to its world-class dining, New York captivates visitors with its energy and endless possibilities.</p>
+
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=1" alt="New York Landmark 1">
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=2" alt="New York Landmark 2">
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=3" alt="New York Landmark 3">
+
+    <h2>Top Attractions</h2>
+
+    <div class="attraction">
+        <h3>Times Square</h3>
+        <p>Latitude: 40.7580, Longitude: -73.9855, Rating: 4.6/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Central Park</h3>
+        <p>Latitude: 40.7829, Longitude: -73.9654, Rating: 4.8/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Statue of Liberty</h3>
+        <p>Latitude: 40.6892, Longitude: -74.0445, Rating: 4.7/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Empire State Building</h3>
+        <p>Latitude: 40.7484, Longitude: -73.9857, Rating: 4.5/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Metropolitan Museum of Art</h3>
+        <p>Latitude: 40.7598, Longitude: -73.9725, Rating: 4.9/5</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([40.7128, -74.0060], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var attractions = [
+            { name: "Times Square", lat: 40.7580, lon: -73.9855, rating: 4.6 },
+            { name: "Central Park", lat: 40.7829, lon: -73.9654, rating: 4.8 },
+            { name: "Statue of Liberty", lat: 40.6892, lon: -74.0445, rating: 4.7 },
+            { name: "Empire State Building", lat: 40.7484, lon: -73.9857, rating: 4.5 },
+            { name: "Metropolitan Museum of Art", lat: 40.7598, lon: -73.9725, rating: 4.9 }
+        ];
+
+        attractions.forEach(function(attraction) {
+            L.marker([attraction.lat, attraction.lon])
+                .addTo(map)
+                .bindPopup(attraction.name + " - Rating: " + attraction.rating + "/5");
+        });
+
+        map.fitBounds([[40.6892, -74.0445], [40.7829, -73.9654]]);
+    </script>
+</body>
+</html>
