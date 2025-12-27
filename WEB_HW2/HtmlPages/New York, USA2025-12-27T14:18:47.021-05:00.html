@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New York, USA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .attraction {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>New York, USA</h1>
+
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=1" alt="New York Landmark 1">
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=2" alt="New York Landmark 2">
+    <img src="https://image.pollinations.ai/prompt/New%20York%2C%20USA%20landmark?seed=3" alt="New York Landmark 3">
+
+    <h2>Top Attractions</h2>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([40.7128, -74.0060], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var attractions = [
+            { name: "Times Square", lat: 40.7580, lon: -73.9855, rating: 4.5 },
+            { name: "Central Park", lat: 40.7829, lon: -73.9654, rating: 4.8 },
+            { name: "Statue of Liberty", lat: 40.6892, lon: -74.0445, rating: 4.7 },
+            { name: "Empire State Building", lat: 40.7484, lon: -73.9857, rating: 4.6 },
+            { name: "Metropolitan Museum of Art", lat: 40.7595, lon: -73.9728, rating: 4.4 }
+        ];
+
+        attractions.forEach(function(attraction) {
+            L.marker([attraction.lat, attraction.lon])
+                .addTo(map)
+                .bindPopup(attraction.name + "<br>Rating: " + attraction.rating + "/5");
+        });
+
+        map.fitBounds([
+            [40.6892, -74.0445],
+            [40.7829, -73.9654]
+        ]);
+    </script>
+</body>
+</html>
