@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sydney, Australia</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #city-description {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .attraction {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .attraction h3 {
+            margin-top: 0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Sydney, Australia</h1>
+
+    <p id="city-description">Sydney, the capital of New South Wales, is a vibrant and cosmopolitan city known for its iconic harbour and stunning beaches. Founded in 1788 as a British penal colony, it has evolved into a global hub for culture, finance, and tourism. With its unique blend of history, modern architecture, and natural beauty, Sydney offers an unforgettable experience for every visitor.</p>
+
+    <img src="https://image.pollinations.ai/prompt/Sydney%2C%20Australia%20landmark?seed=1" alt="Sydney Landmark 1">
+    <img src="https://image.pollinations.ai/prompt/Sydney%2C%20Australia%20landmark?seed=2" alt="Sydney Landmark 2">
+    <img src="https://image.pollinations.ai/prompt/Sydney%2C%20Australia%20landmark?seed=3" alt="Sydney Landmark 3">
+
+    <h2>Top Attractions</h2>
+
+    <div class="attraction">
+        <h3>Sydney Opera House</h3>
+        <p>Latitude: -33.8568, Longitude: 151.2153, Rating: 4.8/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Sydney Harbour Bridge</h3>
+        <p>Latitude: -33.8506, Longitude: 151.2093, Rating: 4.6/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Bondi Beach</h3>
+        <p>Latitude: -33.8942, Longitude: 151.2761, Rating: 4.5/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Royal Botanic Garden Sydney</h3>
+        <p>Latitude: -33.8557, Longitude: 151.2068, Rating: 4.7/5</p>
+    </div>
+    <div class="attraction">
+        <h3>Taronga Zoo</h3>
+        <p>Latitude: -33.8435, Longitude: 151.2754, Rating: 4.4/5</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([-33.8688, 151.2093], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var attractions = [
+            { name: "Sydney Opera House", lat: -33.8568, lon: 151.2153, rating: 4.8 },
+            { name: "Sydney Harbour Bridge", lat: -33.8506, lon: 151.2093, rating: 4.6 },
+            { name: "Bondi Beach", lat: -33.8942, lon: 151.2761, rating: 4.5 },
+            { name: "Royal Botanic Garden Sydney", lat: -33.8557, lon: 151.2068, rating: 4.7 },
+            { name: "Taronga Zoo", lat: -33.8435, lon: 151.2754, rating: 4.4 }
+        ];
+
+        attractions.forEach(function(attraction) {
+            L.marker([attraction.lat, attraction.lon])
+                .addTo(map)
+                .bindPopup(attraction.name + "<br>Rating: " + attraction.rating + "/5");
+        });
+
+        map.fitBounds([[attractions[0].lat, attractions[0].lon], [attractions[4].lat, attractions[4].lon]]);
+    </script>
+</body>
+</html>
