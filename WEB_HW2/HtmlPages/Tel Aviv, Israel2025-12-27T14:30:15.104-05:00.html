@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tel Aviv, Israel</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #city-description {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        .attraction {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .attraction h3 {
+            margin-top: 0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <h1>Tel Aviv, Israel</h1>
+
+    <p id="city-description">Tel Aviv, often dubbed the "City That Never Sleeps," is a vibrant and modern metropolis on Israel's Mediterranean coast. Founded in 1909 as the Jewish cultural center outside Jaffa, it's known for its beautiful beaches, Bauhaus architecture, and lively nightlife.  Visitors are drawn to its unique blend of history, culture, and innovation.</p>
+
+    <img src="https://image.pollinations.ai/prompt/Tel%20Aviv%2C%20Israel%20landmark?seed=1" alt="Tel Aviv Landmark 1">
+    <img src="https://image.pollinations.ai/prompt/Tel%20Aviv%2C%20Israel%20landmark?seed=2" alt="Tel Aviv Landmark 2">
+    <img src="https://image.pollinations.ai/prompt/Tel%20Aviv%2C%20Israel%20landmark?seed=3" alt="Tel Aviv Landmark 3">
+
+    <h2>Top Attractions</h2>
+
+    <div class="attraction">
+        <h3>Old Jaffa</h3>
+        <p>Latitude: 32.0667, Longitude: 34.7678, Rating: 4.7/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Tel Aviv Museum of Art</h3>
+        <p>Latitude: 32.0733, Longitude: 34.7745, Rating: 4.5/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Carmel Market</h3>
+        <p>Latitude: 32.0712, Longitude: 34.7738, Rating: 4.6/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Neve Tzedek</h3>
+        <p>Latitude: 32.0675, Longitude: 34.7653, Rating: 4.4/5</p>
+    </div>
+
+    <div class="attraction">
+        <h3>Rabin Square</h3>
+        <p>Latitude: 32.0705, Longitude: 34.7731, Rating: 4.3/5</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([32.073, 34.771], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var attractions = [
+            { name: "Old Jaffa", lat: 32.0667, lon: 34.7678, rating: 4.7 },
+            { name: "Tel Aviv Museum of Art", lat: 32.0733, lon: 34.7745, rating: 4.5 },
+            { name: "Carmel Market", lat: 32.0712, lon: 34.7738, rating: 4.6 },
+            { name: "Neve Tzedek", lat: 32.0675, lon: 34.7653, rating: 4.4 },
+            { name: "Rabin Square", lat: 32.0705, lon: 34.7731, rating: 4.3 }
+        ];
+
+        attractions.forEach(function(attraction) {
+            var popupContent = attraction.name + "<br>Rating: " + attraction.rating + "/5";
+            L.marker([attraction.lat, attraction.lon]).addTo(map).bindPopup(popupContent);
+        });
+
+        map.fitBounds([[32.0667, 34.7653], [32.0733, 34.7745]]);
+    </script>
+
+</body>
+</html>
